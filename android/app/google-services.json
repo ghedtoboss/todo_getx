@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "209624152639",
+    "project_id": "todosocial-37efa",
+    "storage_bucket": "todosocial-37efa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:209624152639:android:5a323347f6529212c0168a",
+        "android_client_info": {
+          "package_name": "com.example.todo_getx"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "209624152639-kgscctgnkce8p26dl1acdcfbbafgcelh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5E0ZnpTEUEsY377TuDMYxDsoOBah9spk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "209624152639-kgscctgnkce8p26dl1acdcfbbafgcelh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
