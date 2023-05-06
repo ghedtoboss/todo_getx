@@ -96,8 +96,9 @@ class LoginButton extends StatelessWidget {
     return SizedBox(
       width: Get.width * 0.4,
       child: ElevatedButton(
-        onPressed: () {
-          userServiceController.girisYap();
+        onPressed: () async {
+          await userServiceController.girisYap();
+          Get.to(BottomBarAllPages());
         },
         child: Text(
           "Giriş",
@@ -264,14 +265,14 @@ class AddPostButton extends StatelessWidget {
     );
   }
 }
-/*
+
 class TakipButton extends StatelessWidget {
   TakipButton({super.key, required this.userId});
   final userId;
   final userServiceController = Get.put(UserService());
   @override
   Widget build(BuildContext context) {
-    return userServiceController.isFollow == true
+    return userServiceController.isFollow(userId) == true
         ? ElevatedButton(
             onPressed: () async {
               //ToDo takibi bırakma fonksiyonu
@@ -303,4 +304,4 @@ class TakipButton extends StatelessWidget {
                 backgroundColor: Color(0xfff6ebeb)),
           );
   }
-}*/
+}

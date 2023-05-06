@@ -33,7 +33,15 @@ class ProfileCardWidget extends StatelessWidget {
                               children: [
                                 Obx(() => FittedBox(
                                       child: Text(
-                                        userServiceController.adSoyad.value,
+                                        userServiceController
+                                                    .adSoyad.value.length >
+                                                28
+                                            ? userServiceController
+                                                .adSoyad.value
+                                                .substring(0, 28)
+                                            : userServiceController
+                                                .adSoyad.value,
+                                        overflow: TextOverflow.ellipsis,
                                         style: GoogleFonts.lobsterTwo(
                                             textStyle: TextStyle(
                                                 color: Colors.white,
@@ -105,26 +113,6 @@ class ProfileCardWidget extends StatelessWidget {
                                           ),
                                         ),
                                       )),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 2),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Center(
-                                    child: Text(
-                                      "ToDo: 0",
-                                      style: GoogleFonts.lobsterTwo(
-                                          textStyle: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 15)),
-                                    ),
-                                  ),
                                 ],
                               ),
                             ),

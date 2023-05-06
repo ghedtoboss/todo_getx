@@ -36,16 +36,22 @@ class ExploreCardWidget extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Row(
+                              mainAxisSize: MainAxisSize.max,
                               children: [
                                 Column(
                                   children: [
                                     FittedBox(
                                       child: Text(
-                                        user.adSoyad,
+                                        user.adSoyad.length > 30
+                                            ? user.adSoyad.substring(0, 30)
+                                            : user.adSoyad,
+                                        maxLines: 4,
+                                        overflow: TextOverflow.ellipsis,
+                                        //user.adSoyad,
                                         style: GoogleFonts.lobsterTwo(
                                             textStyle: TextStyle(
                                                 color: Colors.white,
-                                                fontSize: 30)),
+                                                fontSize: 20)),
                                       ),
                                     ),
                                     FittedBox(
@@ -59,9 +65,12 @@ class ExploreCardWidget extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                /*TakipButton(
-                                  userId: user.uid,
-                                )*/
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 5),
+                                  child: TakipButton(
+                                    userId: user.uid,
+                                  ),
+                                ),
                               ],
                             ),
                             Padding(
@@ -106,26 +115,6 @@ class ExploreCardWidget extends StatelessWidget {
                                                 color: Colors.white,
                                                 fontSize: 15)),
                                       ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 2),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Center(
-                                    child: Text(
-                                      "ToDo: 0",
-                                      style: GoogleFonts.lobsterTwo(
-                                          textStyle: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 15)),
                                     ),
                                   ),
                                 ],

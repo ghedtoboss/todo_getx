@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -36,7 +38,7 @@ class CurrentUserPosts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: postServiceController.currentUserPostsStream,
+        stream: postServiceController.getCurrentUserPosts(),
         builder: (BuildContext context,
             AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
           if (snapshot.hasError) {
@@ -47,13 +49,17 @@ class CurrentUserPosts extends StatelessWidget {
             return Center(child: CircularProgressIndicator());
           }
 
+          var snapList = snapshot.data?.docs;
+
           return Expanded(
             child: ListView.builder(
                 shrinkWrap: true,
                 physics: AlwaysScrollableScrollPhysics(),
                 itemCount: snapshot.data?.docs.length ?? 0,
                 itemBuilder: (BuildContext context, int index) {
-                  MyPost post = MyPost.fromMap(snapshot.data!.docs[index].data());
+                  MyPost post =
+                      MyPost.fromMap(snapshot.data!.docs[index].data());
+
                   return MyPostCard(post: post);
                 }),
           );

@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,6 +11,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:todo_getx/pages/my_bottom_bar.dart';
+import 'package:todo_getx/services/post_service.dart';
 
 import '../models/user_model.dart';
 import '../pages/login_page.dart';
@@ -24,12 +27,12 @@ class UserService extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
-      if (auth.currentUser != null) {
-        getCurrentUserDoc();
-        getAllUsers();
-      }
-    });
+    // WidgetsBinding.instance?.addPostFrameCallback((_) {
+    //   if (auth.currentUser != null) {
+    //     getCurrentUserDoc();
+    //     getAllUsers();
+    //   }
+    // });
   }
 
   void clearControllers() {
@@ -42,22 +45,29 @@ class UserService extends GetxController {
   }
 
   FirebaseAuth auth = FirebaseAuth.instance;
-
   Future<void> logOut() async {
-    FirebaseAuth.instance.signOut();
-    Get.to(LoginPage());
+    await FirebaseAuth.instance.signOut().then((value) {
+
+      Get.to(() => LoginPage());
+    });
   }
 
   //kullanıcının girişini firebaseauth'ta kontrol eden fonksiyon
   Future<void> girisYap() async {
-    await auth
-        .signInWithEmailAndPassword(
-            email: emailController.text, password: passwordController.text)
-        .then((kullanici) async {
-      await getCurrentUserDoc(); //giriş fonksiyonu çalıştığında user bilgilerini çekme fonksiyonu çalışıyorgetCurrentUserDoc();
-      await getAllUsers(); //giriş fonksiyonu çalıştığında bütün kullanıcı listesini de çekme fonksiyonunu çalıştırıyoruz.
-      Get.to(BottomBarAllPages());
-    });
+    try {
+      await auth
+          .signInWithEmailAndPassword(
+              email: emailController.text, password: passwordController.text)
+          .then((credential) async {
+        if (credential.user != null) {
+          getCurrentUserDoc(credential.user);
+          getAllUsers();
+          //NkNClogq6pfMMVg5rlVmYHYWt5n1
+        }
+      });
+    } catch (e) {
+      print('Giriş hatası: $e');
+    }
   }
 
   //user kayıt fonksiyonu;
@@ -100,27 +110,29 @@ class UserService extends GetxController {
 
   //current user işlemleri;
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
+  FirebaseAuth _auth = FirebaseAuth.instance;
   RxString adSoyad = "".obs;
   RxString imageUrl = "".obs;
   RxString hakkimda = "".obs;
   RxString isAlani = "".obs;
-  RxString currentUserUid = "".obs;
+
   RxList<String> followerList = <String>[].obs;
   RxList<String> followList = <String>[].obs;
   RxList toDoList = [].obs;
-
+  String? get currentUserUid => _auth.currentUser?.uid;
   StreamSubscription<DocumentSnapshot>?
       userDocRef; //kullanıcı bilgilerini sürekli olarak çekmek için
 
   //CurrentUser bilgilerine ulaştığımız fonksiyon
-  Future<void> getCurrentUserDoc() async {
-    final user = FirebaseAuth.instance.currentUser;
+  Future<void> getCurrentUserDoc(User? user) async {
+    if (user == null) {
+      throw Exception("user null geldi");
+    }
     //User data
     userDocRef = FirebaseFirestore
         .instance //burada üstte oluşturduğumuz streamSubscription nesnesini kulanıyoruz
         .collection('Users')
-        .doc(user?.uid)
+        .doc(user.uid)
         .snapshots()
         .listen((userDocSnapshot) {
       if (userDocSnapshot.exists) {
@@ -131,10 +143,10 @@ class UserService extends GetxController {
         imageUrl.value = data["imageUrl"];
         hakkimda.value = data["hakkimda"];
         isAlani.value = data["isAlani"];
-        currentUserUid.value = data["uid"];
         followerList.value = List<String>.from(data['takipciListesi'] ?? []);
         followList.value = List<String>.from(data['takipListesi'] ?? []);
         //ToDo todoList' çek
+        /// çekmemişsin O BAŞKA KANKA
       }
     });
   }
@@ -143,7 +155,7 @@ class UserService extends GetxController {
   Future<void> updateImageUrl(String imageUrl) async {
     await FirebaseFirestore.instance
         .collection("Users")
-        .doc(currentUserUid.value)
+        .doc(currentUserUid)
         .update(<String, String>{"imageUrl": imageUrl});
   }
 
@@ -154,9 +166,8 @@ class UserService extends GetxController {
 
     if (imageFile != null) {
       File file = File(imageFile.path);
-      Reference storageRef = FirebaseStorage.instance
-          .ref()
-          .child("user_images/${currentUserUid.value}");
+      Reference storageRef =
+          FirebaseStorage.instance.ref().child("user_images/${currentUserUid}");
       UploadTask uploadTask = storageRef.putFile(file);
       try {
         await uploadTask.whenComplete(() async {
@@ -173,20 +184,18 @@ class UserService extends GetxController {
   Stream<QuerySnapshot<Map<String, dynamic>>>? allUserListStream;
 
   Future<void> getAllUsers() async {
-    print(currentUserUid.value);
+    log(currentUserUid!);
     allUserListStream = FirebaseFirestore.instance
         .collection("Users")
-        .where("uid", isNotEqualTo: currentUserUid.value)
+        .where("uid", isNotEqualTo: currentUserUid)
         .snapshots();
   }
 
-/*
   //Kullanıcıtakip etme metodu
   Future<void> followUser(String userId) async {
     //currentUser dökümanına ulaşma
-    final currentUserDocRef = FirebaseFirestore.instance
-        .collection("Users")
-        .doc(currentUserUid.value);
+    final currentUserDocRef =
+        FirebaseFirestore.instance.collection("Users").doc(currentUserUid);
 
     //takip edilen kullanıcının dökümanına ulaşma bunu card indeksi ile vericez
     final followedUserDocRef =
@@ -199,7 +208,9 @@ class UserService extends GetxController {
       "takipListesi": FieldValue.arrayUnion([userId])
     });
 
-    batch.update(followedUserDocRef, {"takipciListesi": FieldValue.arrayUnion([currentUserUid.value])});
+    batch.update(followedUserDocRef, {
+      "takipciListesi": FieldValue.arrayUnion([currentUserUid])
+    });
 
     await batch.commit();
   }
@@ -213,9 +224,8 @@ class UserService extends GetxController {
 
   Future<void> unFollowUser(String userId) async {
     //currentUser dökümanına ulaşma
-    final currentUserDocRef = FirebaseFirestore.instance
-        .collection("Users")
-        .doc(currentUserUid.value);
+    final currentUserDocRef =
+        FirebaseFirestore.instance.collection("Users").doc(currentUserUid);
 
     //takipten çıkılan kullanıcının dökümanına ulaşma bunu card indeksi ile vericez
     final followedUserDocRef =
@@ -228,9 +238,9 @@ class UserService extends GetxController {
     });
 
     batch.update(followedUserDocRef, {
-      "takipciListesi": FieldValue.arrayRemove([currentUserUid.value])
+      "takipciListesi": FieldValue.arrayRemove([currentUserUid])
     });
 
     batch.commit();
-  }*/
+  }
 }

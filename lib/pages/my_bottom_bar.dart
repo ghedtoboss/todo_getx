@@ -27,8 +27,8 @@ class BottomBarAllPages extends StatelessWidget {
                 ))
           ],
           leading: IconButton(
-              onPressed: () {
-                userServiceController.logOut();
+              onPressed: () async {
+                await userServiceController.logOut();
               },
               icon: Icon(
                 Icons.logout,

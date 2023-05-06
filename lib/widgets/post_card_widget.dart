@@ -102,15 +102,15 @@ class MyPostCard extends StatelessWidget {
                           ),
                         )
                       : InkWell(
-                        onTap: () async {
+                          onTap: () async {
                             await isThisMyPost();
                             showAlertDialog(context);
                           },
-                        child: Icon(
+                          child: Icon(
                             Icons.cancel,
                             color: Colors.white,
                           ),
-                      ),
+                        ),
                   Padding(
                     padding: const EdgeInsets.only(right: 10),
                     child: Row(

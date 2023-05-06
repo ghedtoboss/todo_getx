@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -12,7 +14,6 @@ class PostService extends GetxController {
   TextEditingController newTodoContentController =
       TextEditingController(); //addPost metodunda
 
-  //post ekleme işlemi;
   Future<void> addPost() async {
     try {
       final DocumentReference postRef =
@@ -22,7 +23,7 @@ class PostService extends GetxController {
         id: postRef.id,
         title: newTodoTitleController.text.toUpperCase(),
         content: newTodoContentController.text,
-        author: userServiceController.currentUserUid.value,
+        author: userServiceController.currentUserUid!,
         isFinished: false,
         comments: {},
         likes: [],
@@ -42,16 +43,14 @@ class PostService extends GetxController {
   @override
   void onInit() {
     super.onInit();
-        getCurrentUserPosts();
+    getCurrentUserPosts();
   }
 
   //currentUser postları
-  Stream<QuerySnapshot<Map<String, dynamic>>>? currentUserPostsStream;
-
-  Future<void> getCurrentUserPosts() async {
-    currentUserPostsStream = FirebaseFirestore.instance
+  Stream<QuerySnapshot<Map<String, dynamic>>> getCurrentUserPosts() {
+    return FirebaseFirestore.instance
         .collection("Posts")
-        .where("author", isEqualTo: userServiceController.currentUserUid.value)
+        .where("author", isEqualTo: userServiceController.currentUserUid)
         .snapshots();
   }
 }
