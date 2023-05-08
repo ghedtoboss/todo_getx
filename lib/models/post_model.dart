@@ -60,7 +60,8 @@ class MyPost {
 
   factory MyPost.fromMap(Map<String, dynamic> map) {
     Map<String, dynamic> commentsMap = map['comments'] as Map<String, dynamic>;
-    Map<String, String> comments = commentsMap.map((key, value) => MapEntry<String, String>(key, value as String));
+    Map<String, String> comments = commentsMap
+        .map((key, value) => MapEntry<String, String>(key, value as String));
 
     List<dynamic> likesList = map['likes'] as List<dynamic>;
     List<String> likes = likesList.cast<String>();

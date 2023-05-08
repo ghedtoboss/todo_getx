@@ -62,5 +62,11 @@ class PostService extends GetxController {
         .snapshots();
   }
 
-  
+  //home page posts;
+  Stream<QuerySnapshot<Map<String, dynamic>>>? getHomePosts() {
+    return FirebaseFirestore.instance
+        .collection("Posts")
+        //.where("author", whereIn: userServiceController.followList.value)
+        .snapshots();
+  }
 }
