@@ -32,7 +32,7 @@ class AllUserList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: userServiceController.allUserListStream,
+        stream: userServiceController.getAllUsers(),
         builder: (BuildContext context,
             AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
           if (snapshot.hasError) {

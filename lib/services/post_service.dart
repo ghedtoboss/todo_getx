@@ -53,4 +53,14 @@ class PostService extends GetxController {
         .where("author", isEqualTo: userServiceController.currentUserUid)
         .snapshots();
   }
+
+  //another user posts;
+  Stream<QuerySnapshot<Map<String, dynamic>>>? getThisUserPosts(String userId) {
+    return FirebaseFirestore.instance
+        .collection("Posts")
+        .where("author", isEqualTo: userId)
+        .snapshots();
+  }
+
+  
 }

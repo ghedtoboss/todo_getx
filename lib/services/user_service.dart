@@ -181,11 +181,8 @@ class UserService extends GetxController {
   }
 
   //Tüm kullanıcıların listesini çekme;
-  Stream<QuerySnapshot<Map<String, dynamic>>>? allUserListStream;
-
-  Future<void> getAllUsers() async {
-    log(currentUserUid!);
-    allUserListStream = FirebaseFirestore.instance
+  Stream<QuerySnapshot<Map<String, dynamic>>>? getAllUsers(){
+    return FirebaseFirestore.instance
         .collection("Users")
         .where("uid", isNotEqualTo: currentUserUid)
         .snapshots();

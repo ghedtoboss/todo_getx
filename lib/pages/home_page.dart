@@ -21,8 +21,25 @@ class HomePage extends StatelessWidget {
         backgroundColor: Color(0xfff6ebeb),
       ),
       body: Center(
-        child: Text("Home"),
+        child: Container(
+          width: Get.width,
+          height: Get.height,
+          decoration: BoxDecoration(color: Color.fromARGB(255, 236, 164, 112)),
+          child: Column(
+            children: [],
+          ),
+        ),
       ),
     );
+  }
+}
+
+
+class HomePosts extends StatelessWidget {
+  const HomePosts({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }
