@@ -146,7 +146,6 @@ class UserService extends GetxController {
         followerList.value = List<String>.from(data['takipciListesi'] ?? []);
         followList.value = List<String>.from(data['takipListesi'] ?? []);
         //ToDo todoList' çek
-        /// çekmemişsin O BAŞKA KANKA
       }
     });
   }

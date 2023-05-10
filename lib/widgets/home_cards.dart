@@ -18,13 +18,27 @@ class HomeCards extends StatefulWidget {
 }
 
 class _HomeCardsState extends State<HomeCards> {
-  final homeCardController = Get.put(HomeCardController());
+  String? authorName;
+  String? authorImageUrl;
+
+  Future<void> getUserNameAndPhoto() async {
+    var data = await FirebaseFirestore.instance
+        .collection("Users")
+        .doc(widget.post.author)
+        .get();
+    authorName = data["adSoyad"];
+    authorImageUrl = data["imageUrl"];
+
+    setState(() {
+      
+    });
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    homeCardController.getAuthorNameAndImage(widget.post);
+    getUserNameAndPhoto();
   }
 
   @override
@@ -61,18 +75,12 @@ class _HomeCardsState extends State<HomeCards> {
                               decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   image: DecorationImage(
-                                      image: NetworkImage(homeCardController
-                                                  .authorImageUrl.value ==
-                                              ""
-                                          ? "https://firebasestorage.googleapis.com/v0/b/todosocial-37efa.appspot.com/o/nopp.png?alt=media&token=a7867c84-6724-431d-8b9b-c5429d43feae"
-                                          : homeCardController
-                                              .authorImageUrl.value),
+                                      image: NetworkImage(authorImageUrl ??
+                                          "https://firebasestorage.googleapis.com/v0/b/todosocial-37efa.appspot.com/o/nopp.png?alt=media&token=a7867c84-6724-431d-8b9b-c5429d43feae"),
                                       fit: BoxFit.fill))),
                         ),
                         Text(
-                          homeCardController.authorName.value == ""
-                              ? "Bilgi yok"
-                              : homeCardController.authorName.value,
+                          authorName ?? "Bilgi yok",
                           style: GoogleFonts.lobsterTwo(
                               textStyle:
                                   TextStyle(fontSize: 10, color: Colors.white)),
