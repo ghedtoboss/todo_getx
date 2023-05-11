@@ -2,21 +2,24 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:todo_getx/models/post_model.dart';
+import 'package:todo_getx/services/post_service.dart';
 import 'package:todo_getx/services/user_service.dart';
 
 class MyPostCard extends StatelessWidget {
-  const MyPostCard({
+  MyPostCard({
     super.key,
     required this.post,
   });
 
   final MyPost post;
+  final userServiceController = Get.put(UserService());
+  final postServiceController = Get.put(PostService());
 
   bool isThisMyPost() {
-    final userServiceController = Get.put(UserService());
     var myPost = post.author == userServiceController.currentUserUid;
     return myPost;
   }
@@ -93,8 +96,11 @@ class MyPostCard extends StatelessWidget {
                   post.isFinished == true
                       ? InkWell(
                           onTap: () async {
-                            await isThisMyPost();
-                            showAlertDialog(context);
+                            await isThisMyPost()
+                                ? showAlertDialog(context)
+                                : Fluttertoast.showToast(
+                                    msg: "Size ait değil",
+                                    backgroundColor: Colors.red);
                           },
                           child: Icon(
                             Icons.check_circle,
@@ -103,8 +109,11 @@ class MyPostCard extends StatelessWidget {
                         )
                       : InkWell(
                           onTap: () async {
-                            await isThisMyPost();
-                            showAlertDialog(context);
+                            await isThisMyPost()
+                                ? showAlertDialog(context)
+                                : Fluttertoast.showToast(
+                                    msg: "Size ait değil",
+                                    backgroundColor: Colors.red);
                           },
                           child: Icon(
                             Icons.cancel,
@@ -119,14 +128,26 @@ class MyPostCard extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Center(
-                          child: IconButton(
-                              onPressed: () {
-                                //ToDo beğenme fonksiyonu
-                              },
-                              icon: Icon(
-                                Icons.thumb_up_alt_outlined,
-                                color: Colors.white,
-                              )),
+                          child: post.likes.contains(
+                                  userServiceController.currentUserUid)
+                              ? IconButton(
+                                  onPressed: () {
+                                    //ToDo dislike fonksiyonu
+                                    postServiceController.dislikePost(post.id);
+                                  },
+                                  icon: Icon(
+                                    Icons.thumb_up_alt,
+                                    color: Colors.white,
+                                  ))
+                              : IconButton(
+                                  onPressed: () {
+                                    //ToDo like fonksiyonu
+                                    postServiceController.likePost(post.id);
+                                  },
+                                  icon: Icon(
+                                    Icons.thumb_up_alt_outlined,
+                                    color: Colors.white,
+                                  )),
                         ),
                         Center(
                           child: Text(

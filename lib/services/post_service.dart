@@ -69,4 +69,17 @@ class PostService extends GetxController {
         //.where("author", whereIn: userServiceController.followList.value)
         .snapshots();
   }
+
+  //post beğenme özelliği;
+  void likePost(String postId) {
+    FirebaseFirestore.instance.collection("Posts").doc(postId).update({
+      "likes": FieldValue.arrayUnion([userServiceController.currentUserUid])
+    });
+  }
+
+  void dislikePost(String postId) {
+    FirebaseFirestore.instance.collection("Posts").doc(postId).update({
+      "likes": FieldValue.arrayRemove([userServiceController.currentUserUid])
+    });
+  }
 }

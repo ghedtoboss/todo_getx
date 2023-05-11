@@ -5,6 +5,8 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:todo_getx/controller/home_card_ctrl.dart';
+import 'package:todo_getx/services/post_service.dart';
+import 'package:todo_getx/services/user_service.dart';
 
 import '../models/post_model.dart';
 import '../models/user_model.dart';
@@ -20,6 +22,8 @@ class HomeCards extends StatefulWidget {
 class _HomeCardsState extends State<HomeCards> {
   String? authorName;
   String? authorImageUrl;
+  final postServiceController = Get.put(PostService());
+  final userServiceController = Get.put(UserService());
 
   Future<void> getUserNameAndPhoto() async {
     var data = await FirebaseFirestore.instance
@@ -29,9 +33,7 @@ class _HomeCardsState extends State<HomeCards> {
     authorName = data["adSoyad"];
     authorImageUrl = data["imageUrl"];
 
-    setState(() {
-      
-    });
+    setState(() {});
   }
 
   @override
@@ -149,14 +151,28 @@ class _HomeCardsState extends State<HomeCards> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Center(
-                          child: IconButton(
-                              onPressed: () {
-                                //ToDo beğenme fonksiyonu
-                              },
-                              icon: Icon(
-                                Icons.thumb_up_alt_outlined,
-                                color: Colors.white,
-                              )),
+                          child: widget.post.likes.contains(
+                                  userServiceController.currentUserUid)
+                              ? IconButton(
+                                  onPressed: () {
+                                    //ToDo dislike fonksiyonu
+                                    postServiceController
+                                        .dislikePost(widget.post.id);
+                                  },
+                                  icon: Icon(
+                                    Icons.thumb_up_alt,
+                                    color: Colors.white,
+                                  ))
+                              : IconButton(
+                                  onPressed: () {
+                                    //ToDo like fonksiyonu
+                                    postServiceController
+                                        .likePost(widget.post.id);
+                                  },
+                                  icon: Icon(
+                                    Icons.thumb_up_alt_outlined,
+                                    color: Colors.white,
+                                  )),
                         ),
                         Center(
                           child: Text(
