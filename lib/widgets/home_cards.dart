@@ -4,7 +4,6 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:todo_getx/controller/home_card_ctrl.dart';
 import 'package:todo_getx/services/post_service.dart';
 import 'package:todo_getx/services/user_service.dart';
 
