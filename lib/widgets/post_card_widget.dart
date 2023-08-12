@@ -28,7 +28,7 @@ class MyPostCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: Get.width * 0.9,
-      height: Get.height * 0.22,
+      height: Get.height * 0.25,
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),

@@ -46,7 +46,7 @@ class _HomeCardsState extends State<HomeCards> {
   Widget build(BuildContext context) {
     return Container(
       width: Get.width * 0.9,
-      height: Get.height * 0.3,
+      height: Get.height * 0.35,
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
@@ -155,8 +155,7 @@ class _HomeCardsState extends State<HomeCards> {
                               ? IconButton(
                                   onPressed: () {
                                     //ToDo dislike fonksiyonu
-                                    postServiceController
-                                        .dislikePost(widget.post.id);
+                                    postServiceController.dislikePost(widget.post.id);
                                   },
                                   icon: Icon(
                                     Icons.thumb_up_alt,

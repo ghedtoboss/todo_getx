@@ -24,17 +24,6 @@ class UserService extends GetxController {
   TextEditingController selectedJobController = TextEditingController();
   TextEditingController hakkimdaController = TextEditingController();
 
-  @override
-  void onInit() {
-    super.onInit();
-    // WidgetsBinding.instance?.addPostFrameCallback((_) {
-    //   if (auth.currentUser != null) {
-    //     getCurrentUserDoc();
-    //     getAllUsers();
-    //   }
-    // });
-  }
-
   void clearControllers() {
     emailController.clear();
     passwordController.clear();
@@ -62,7 +51,6 @@ class UserService extends GetxController {
         if (credential.user != null) {
           getCurrentUserDoc(credential.user);
           getAllUsers();
-          //NkNClogq6pfMMVg5rlVmYHYWt5n1
         }
       });
     } catch (e) {
@@ -130,7 +118,7 @@ class UserService extends GetxController {
     }
     //User data
     userDocRef = FirebaseFirestore
-        .instance //burada üstte oluşturduğumuz streamSubscription nesnesini kulanıyoruz
+        .instance
         .collection('Users')
         .doc(user.uid)
         .snapshots()

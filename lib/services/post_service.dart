@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -14,6 +13,7 @@ class PostService extends GetxController {
   TextEditingController newTodoContentController =
       TextEditingController(); //addPost metodunda
 
+  //Post ekleme fonksiyonu
   Future<void> addPost() async {
     try {
       final DocumentReference postRef =
@@ -66,7 +66,7 @@ class PostService extends GetxController {
   Stream<QuerySnapshot<Map<String, dynamic>>>? getHomePosts() {
     return FirebaseFirestore.instance
         .collection("Posts")
-        //.where("author", whereIn: userServiceController.followList.value)
+        //ToDo .where("author", whereIn: userServiceController.followList.value)
         .snapshots();
   }
 
